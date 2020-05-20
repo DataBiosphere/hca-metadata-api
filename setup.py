@@ -5,7 +5,7 @@ setup(
     version="1.0b24.dev1",
     license='MIT',
     install_requires=[
-        'dataclasses >= 0.6'
+        "dataclasses >= 0.6;python_version<'3.7'"
     ],
     # Not using tests_require because that installs the test requirements into .eggs, not the virtualenv
     extras_require={
