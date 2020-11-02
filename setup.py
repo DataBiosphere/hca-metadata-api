@@ -30,6 +30,6 @@ setup(
     package_dir={'': 'src'},
     packages=find_namespace_packages('src'),
     project_urls={
-        "Source Code": "https://github.com/HumanCellAtlas/metadata-api",
+        "Source Code": "https://github.com/DataBiosphere/hca-metadata-api",
     }
 )
