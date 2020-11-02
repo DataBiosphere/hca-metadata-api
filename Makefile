@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-ifneq ($(shell python -c "import sys; print(hasattr(sys, 'real_prefix'))"),True)
+ifndef VIRTUAL_ENV
 $(error Looks like no virtualenv is active)
 endif
 
