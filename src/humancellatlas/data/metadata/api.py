@@ -843,7 +843,7 @@ class Link:
                           source_type='process',
                           destination_id=UUID4(protocol['protocol_id']),
                           destination_type=lookup(protocol, 'type', 'protocol_type'))
-        elif schema_version[0] == 2:
+        elif schema_version[0] in (2, 3):
             # DCP/2 (current)
             link_type = json['link_type']
             if link_type == 'process_link':
