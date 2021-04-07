@@ -41,6 +41,9 @@ from humancellatlas.data.metadata.api import (
     SupplementaryFile,
     entity_types as api_entity_types,
 )
+from humancellatlas.data.metadata.helpers.staging_area import (
+    StagingArea,
+)
 from humancellatlas.data.metadata.helpers.dss import (
     download_bundle_metadata,
     dss_client,
@@ -543,6 +546,19 @@ class TestAccessorApi(TestCase):
             }
         }
     }
+
+    def test_canned_staging_area(self):
+        repo_owner = 'HumanCellAtlas'
+        repo_name = 'schema-test-data'
+        repo_branch = 'release-data-26/03/2021'
+        repo_path = 'tests'
+        sa = StagingArea(repo_owner, repo_name, repo_branch, repo_path)
+        self.assertGreater(len(sa.links), 0)
+        for link_id in sa.links:
+            with self.subTest(link_id=link_id):
+                bundle = sa.get_bundle(link_id)
+                bundle_json = as_json(bundle)
+                self.assertEqual(link_id, bundle_json['uuid'])
 
     # FIXME: Remove test or add replacement
     @skip('DSS is EOL (https://github.com/DataBiosphere/hca-metadata-api/issues/37)')

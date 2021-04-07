@@ -24,7 +24,8 @@ setup(
         "test": [
             'checksumming_io == 0.0.1',
             'atomicwrites == 1.3.0',
-            'more_itertools == 7.0.0'
+            'more_itertools == 7.0.0',
+            'PyGithub == 1.54.1'
         ]
     },
     package_dir={'': 'src'},
