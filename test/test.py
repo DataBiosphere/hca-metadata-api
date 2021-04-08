@@ -69,6 +69,7 @@ class TestAccessorApi(TestCase):
                 del d[old_name]
 
     def test_lymphocytes(self):
+        logging.info('GH_API_TOKEN length %i', len(os.environ['GH_API_TOKEN']))
         self._test_example_bundle(directory='CD4+ cytotoxic T lymphocytes',
                                   age_range=AgeRange(min=567648000.0, max=1892160000.0),
                                   diseases={'normal'},
