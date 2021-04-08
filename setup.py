@@ -14,6 +14,12 @@ setup(
             'urllib3 >= 1.23',
             'requests >= 2.19.1'
         ],
+        "staging_area": [
+            'attrs == 20.3.0',
+            'furl == 2.1.2',
+            'jsonschema == 3.2.0',
+            'PyGithub == 1.54.1'
+        ],
         "examples": [
             'jupyter >= 1.0.0'
         ],
