@@ -12,11 +12,11 @@ install_flake8:
 	pip install -U flake8==3.7.8
 
 install:
-	pip install -e .[dss,test,coverage,examples]
+	pip install -e .[dss,staging_area,test,coverage,examples]
 
 travis_install:
 	pip install -U setuptools>=40.1.0
-	pip install -e .[dss,test,coverage]
+	pip install -e .[dss,staging_area,test,coverage]
 
 test: install
 	coverage run -m unittest discover -vs test
