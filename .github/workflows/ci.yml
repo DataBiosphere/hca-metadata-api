@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+env:
+    python_version: 3.6
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.python_version }}
+    - uses: actions/cache@v2
+    - name: Test
+      run: |
+        make travis_install
+        # Hack: The use of chrgp compensates for a quirk of Docker. The PyCharm image
+        # used by make format sets up a user called `developer` and assigns it UID
+        # 1000. Actions is running as UID 1001. An alternative would be to pass --user
+        # to `docker run` and bind-mount an /etc/passwd that maps that to `developer`.
+        # We also need write permissions for the group
+        chmod -R g+w . && sudo chgrp -R 1000 . && make format && sudo chgrp -R $(id -g) .
+        make check_clean
+        make pep8
+        make test
+    - uses: actions/upload-artifact@v2
+      with:
+        name: coverage-file
+        path: .coverage
+
+  coveralls:
+    needs: test
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.python_version }}
+      - name: Download coverage file
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-file
+      - name: Coveralls
+        run: |
+          pip install coveralls==3.0.1
+          COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }} coveralls
