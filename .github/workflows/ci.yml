@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - issues/achave11/62-CI-on-GH-actions # Drop after test run OK
 
 env:
     python_version: 3.6
