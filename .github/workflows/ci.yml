@@ -18,11 +18,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ env.python_version }}
-      run: |
-          python3.6 -m venv .venv
-          source .venv/bin/activate
     - name: Test
       run: |
+        python3.6 -m venv .venv
+        source .venv/bin/activate
         make travis_install
         # Hack: The use of chrgp compensates for a quirk of Docker. The PyCharm image
         # used by make format sets up a user called `developer` and assigns it UID
