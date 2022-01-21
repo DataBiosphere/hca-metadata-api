@@ -1,10 +1,10 @@
 name: CI
 
 on:
-  pull_request:
   push:
-    branches:
-      - issues/achave11/62-CI-on-GH-actions # Drop after test run OK
+    branches: [ issues/achave11/62-CI-on-GH-actions ]
+  pull_request:
+    branches: [ issues/achave11/62-CI-on-GH-actions ]
 
 env:
     python_version: 3.6
@@ -14,11 +14,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
+    - name: Set up Python 3.6
       uses: actions/setup-python@v2
       with:
         python-version: ${{ env.python_version }}
-    - uses: actions/cache@v2
     - name: Test
       run: |
         make travis_install
