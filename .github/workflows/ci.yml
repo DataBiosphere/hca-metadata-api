@@ -18,6 +18,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ env.python_version }}
+      run: |
+          python3.6 -m venv .venv
+          source .venv/bin/activate
     - name: Test
       run: |
         make travis_install
