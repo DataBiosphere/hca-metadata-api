@@ -38,3 +38,54 @@ area repository.
 
 Copy the token and use it as the value of an environment variable named
 `GITHUB_TOKEN`.
+
+## Release guide
+
+This guide will walk you through the steps necessary to promote the `develop`
+branch to `main`, tag the release, and prepare `develop` for the next release.
+
+Note: For purpose of example, this guide will pretend we are upgrading `main`
+from release 29 to 30.
+
+1. Merge `develop` into `main`.
+
+   - Resolve conflicts in `setup.py`, promote to the higher version.
+
+       ```
+       <     version="1.0b29",       # value from `main`
+       <     version="1.0b30.dev1",  # value from `develop`
+       >     version="1.0b30",       # new value for `main`
+       ```
+
+   - Title the merge commit: "Release beta 30".
+
+   - Push `main` to GitHub.
+
+2. Create a new release.
+
+   - On the GitHub repository home page click *Releases* — *Draft a new release*
+
+       - Tag: (create new) `release/1.0b30`
+
+       - Target: `main`
+
+       - Title: `Release 1.0 beta 30`
+
+       - description: (list all tickets & PRs included since the previous release)
+
+       - This is a pre-release: (leave unchecked)
+
+       - Click *Publish release*.
+
+3. Prepare `develop` for the next release.
+
+   - Add a commit to increment the version in `setup.py` .
+
+       ```
+       <    version="1.0b30.dev1",
+       >    version="1.0b31.dev1",
+       ```
+
+   - Title the commit "Prepare beta 31".
+
+   - Push `develop` to GitHub.
