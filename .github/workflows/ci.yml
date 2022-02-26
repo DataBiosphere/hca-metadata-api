@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+      - main
+
+env:
+    python_version: 3.6
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.python_version }}
+    - uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('setup.py', 'Makefile') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Test
+      run: |
+        python3.6 -m venv .venv
+        source .venv/bin/activate
+        make travis_install
+        # Hack: The use of `chrgp` compensates for a quirk of Docker. The PyCharm image
+        # used by `make format` sets up a user called `developer` and assigns it UID
+        # 1000. GitHub Actions runs as UID 121. An alternative would be to pass --user
+        # to `docker run` and bind-mount an /etc/passwd that maps that to `developer`.
+        # Currently, we're unclear why `make format` works as is on developer machines.
+        chmod -R g+w . && sudo chgrp -R 1000 . && make format && sudo chgrp -R $(id -g) .
+        make check_clean
+        make pep8
+        make test
+    - uses: actions/upload-artifact@v2
+      with:
+        name: coverage-file
+        path: .coverage
+
+  coveralls:
+    needs: test
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.python_version }}
+      - name: Download coverage file
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-file
+      - name: Coveralls
+        run: |
+          pip install coveralls==3.0.1
+          # This API token is associated with the repository, not any particular user. A 
+          # GitHub user with admin privileges must retrieve the token from 
+          # https://coveralls.io/github/DataBiosphere/hca-metadata-api and deposit it in
+          # https://github.com/DataBiosphere/hca-metadata-api/settings/secrets/actions
+          # as a secret called `COVERALLS_REPO_TOKEN`.
+          COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }} coveralls
